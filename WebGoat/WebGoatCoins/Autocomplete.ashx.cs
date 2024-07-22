@@ -30,7 +30,7 @@ namespace OWASP.WebGoat.NET.WebGoatCoins
             if (json != null && json.Length > 0)
             {
                 context.Response.ContentType = "text/plain";
-                context.Response.Write(System.Net.WebUtility.HtmlEncode(json));
+                context.Response.Write(System.Net.WebUtility.HtmlEncode(System.Net.WebUtility.HtmlEncode(json)));
             }
             else
             {

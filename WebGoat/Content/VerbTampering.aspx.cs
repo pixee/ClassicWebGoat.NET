@@ -11,7 +11,7 @@ namespace OWASP.WebGoat.NET
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            lblTampered.Text = System.Net.WebUtility.HtmlEncode(tamperedMessage);
+            lblTampered.Text = System.Net.WebUtility.HtmlEncode(System.Net.WebUtility.HtmlEncode(tamperedMessage));
         } 
     }
 }
