@@ -200,8 +200,11 @@ namespace OWASP.WebGoat.NET.App_Code.DB
             
                 using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
-                    string sql = "select email from CustomerLogin where customerNumber = " + customerNumber;
-                    MySqlCommand command = new MySqlCommand(sql, connection);
+                    string sql = "select email from CustomerLogin where customerNumber = @customerNumber";
+                    MySqlCommand command = new MySqlCommand("insert into Comments(productCode, email, comment) values (@productCode, @email, @comment);", connection);
+command.Parameters.AddWithValue("@customerNumber", customerNumber);
+command.Parameters.AddWithValue("@customerNumber", customerNumber);
+command.Parameters.AddWithValue("@customerNumber", customerNumber);
                     output = command.ExecuteScalar().ToString();
                 } 
             }
@@ -279,10 +282,19 @@ namespace OWASP.WebGoat.NET.App_Code.DB
                 using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
                     connection.Open();
-                    MySqlCommand command = new MySqlCommand(sql, connection);
+command.Parameters.AddWithValue("@productCode", productCode);
+                    MySqlCommand command = new MySqlCommand("update CustomerLogin set password = @password where customerNumber = @customerNumber", connection);
+command.Parameters.AddWithValue("@email", email);
+command.Parameters.AddWithValue("@productCode", productCode);
+command.Parameters.AddWithValue("@comment", comment);
                     command.ExecuteNonQuery();
+command.Parameters.AddWithValue("@email", email);
+command.Parameters.AddWithValue("@productCode", productCode);
+command.Parameters.AddWithValue("@comment", comment);
                 }
+command.Parameters.AddWithValue("@email", email);
             }
+command.Parameters.AddWithValue("@comment", comment);
             catch (Exception ex)
             {
                 log.Error("Error adding comment", ex);
@@ -297,15 +309,21 @@ namespace OWASP.WebGoat.NET.App_Code.DB
             string sql = "update CustomerLogin set password = '" + Encoder.Encode(password) + "' where customerNumber = " + customerNumber;
             string output = null;
             try
+command.Parameters.AddWithValue("@password", Encoder.Encode(password));
             {
+command.Parameters.AddWithValue("@customerNumber", customerNumber);
             
                 using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
+command.Parameters.AddWithValue("@password", Encoder.Encode(password));
                     MySqlCommand command = new MySqlCommand(sql, connection);
+command.Parameters.AddWithValue("@customerNumber", customerNumber);
                 
                     int rows_added = command.ExecuteNonQuery();
                     
+command.Parameters.AddWithValue("@password", Encoder.Encode(password));
                     log.Info("Rows Added: " + rows_added + " to comment table");
+command.Parameters.AddWithValue("@customerNumber", customerNumber);
                 }
             }
             catch (Exception ex)
@@ -536,7 +554,7 @@ namespace OWASP.WebGoat.NET.App_Code.DB
             try
             {
             
-                output = (String)MySqlHelper.ExecuteScalar(_connectionString, "select email from CustomerLogin where customerNumber = " + num);
+                output = (String)MySqlHelper.ExecuteScalar(_connectionString, "select email from CustomerLogin where customerNumber = @num", new MySqlParameter("@num", num));
                 /*using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
                     string sql = "select email from CustomerLogin where customerNumber = " + num;

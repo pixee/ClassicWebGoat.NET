@@ -187,8 +187,9 @@ namespace OWASP.WebGoat.NET.App_Code.DB
                 {
                     connection.Open();
 
-                    string sql = "select email from CustomerLogin where customerNumber = " + customerNumber;
-                    SqliteCommand command = new SqliteCommand(sql, connection);
+                    string sql = "select email from CustomerLogin where customerNumber = @customerNumber";
+                    SqliteCommand command = new SqliteCommand("insert into Comments(productCode, email, comment) values (@productCode, @email, @comment);", connection);
+                    command.Parameters.AddWithValue("@productCode", productCode); command.Parameters.AddWithValue("@email", email); command.Parameters.AddWithValue("@comment", comment);
                     output = command.ExecuteScalar().ToString();
                 } 
             }
@@ -271,7 +272,8 @@ namespace OWASP.WebGoat.NET.App_Code.DB
                 using (SqliteConnection connection = new SqliteConnection(_connectionString))
                 {
                     connection.Open();
-                    SqliteCommand command = new SqliteCommand(sql, connection);
+                    SqliteCommand command = new SqliteCommand("update CustomerLogin set password = @password where customerNumber = @customerNumber", connection);
+                    command.Parameters.AddWithValue("@password", Encoder.Encode(password)); command.Parameters.AddWithValue("@customerNumber", customerNumber);
                     command.ExecuteNonQuery();
                 }
             }
@@ -551,7 +553,8 @@ namespace OWASP.WebGoat.NET.App_Code.DB
                 {
                     connection.Open();
 
-                    string sql = "select email from CustomerLogin where customerNumber = " + num;
+                    string sql = "select email from CustomerLogin where customerNumber = @customerNumber";
+                    cmd.Parameters.AddWithValue("@customerNumber", num);
                     SqliteCommand cmd = new SqliteCommand(sql, connection);
                     output = (string)cmd.ExecuteScalar();
                 }
