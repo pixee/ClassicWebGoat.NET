@@ -14,7 +14,7 @@ namespace OWASP.WebGoat.NET
         
             var name = txtName.Text;
             txtName.Text = "";
-            lblOutput.Text = "Thank you for using WebGoat.NET " + reverse(name);
+            lblOutput.Text = "Thank you for using WebGoat.NET " + System.Net.WebUtility.HtmlEncode(reverse(name));
         
         }
         
