@@ -200,8 +200,10 @@ namespace OWASP.WebGoat.NET.App_Code.DB
             
                 using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
-                    string sql = "select email from CustomerLogin where customerNumber = " + customerNumber;
-                    MySqlCommand command = new MySqlCommand(sql, connection);
+                    string sql = "select email from CustomerLogin where customerNumber = @customerNumber";
+                    MySqlCommand command = new MySqlCommand("update CustomerLogin set password = @password where customerNumber = @customerNumber", connection);
+                    command.Parameters.AddWithValue("@password", Encoder.Encode(password));
+                    command.Parameters.AddWithValue("@customerNumber", customerNumber);
                     output = command.ExecuteScalar().ToString();
                 } 
             }
@@ -278,8 +280,10 @@ namespace OWASP.WebGoat.NET.App_Code.DB
 
                 using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
-                    connection.Open();
-                    MySqlCommand command = new MySqlCommand(sql, connection);
+                    MySqlCommand command = new MySqlCommand("insert into Comments(productCode, email, comment) values (@productCode, @email, @comment);", connection);
+                    command.Parameters.AddWithValue("@productCode", productCode);
+                    command.Parameters.AddWithValue("@email", email);
+                    command.Parameters.AddWithValue("@comment", comment);
                     command.ExecuteNonQuery();
                 }
             }
@@ -303,6 +307,7 @@ namespace OWASP.WebGoat.NET.App_Code.DB
                 {
                     MySqlCommand command = new MySqlCommand(sql, connection);
                 
+                    command.Parameters.AddWithValue("@customerNumber", customerNumber);
                     int rows_added = command.ExecuteNonQuery();
                     
                     log.Info("Rows Added: " + rows_added + " to comment table");
@@ -536,7 +541,7 @@ namespace OWASP.WebGoat.NET.App_Code.DB
             try
             {
             
-                output = (String)MySqlHelper.ExecuteScalar(_connectionString, "select email from CustomerLogin where customerNumber = " + num);
+                output = (String)MySqlHelper.ExecuteScalar(_connectionString, "select email from CustomerLogin where customerNumber = @num", new MySqlParameter("@num", num));
                 /*using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
                     string sql = "select email from CustomerLogin where customerNumber = " + num;
